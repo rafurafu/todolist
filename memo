@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームIDとパスワード管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #container {
+            max-width: 600px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .entry-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .entry-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .copy-button,
+        .delete-button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .copy-button:hover,
+        .delete-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>ゲームIDとパスワード管理</h1>
+        <form id="game-form">
+            <label for="game-id">ゲームID:</label>
+            <input type="text" id="game-id" name="game-id" required>
+
+            <label for="password">パスワード:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="button" onclick="addEntry()">保存</button>
+        </form>
+        <h2>登録情報</h2>
+        <div id="entry-list">
+            <!-- ここに情報が追加されます -->
+        </div>
+    </div>
+
+    <script>
+        function addEntry() {
+            const gameIdInput = document.getElementById("game-id");
+            const passwordInput = document.getElementById("password");
+            const entryList = document.getElementById("entry-list");
+
+            const gameId = gameIdInput.value;
+            const password = passwordInput.value;
+
+            if (gameId && password) {
+                const entryContainer = document.createElement("div");
+                entryContainer.classList.add("entry-container");
+
+                const entryInfo = document.createElement("div");
+                entryInfo.classList.add("entry-info");
+                entryInfo.textContent = `ゲームID: ${gameId}, パスワード: ${password}`;
+
+                const copyGameIdButton = createCopyButton(gameId);
+                const copyPasswordButton = createCopyButton(password);
+
+                const deleteButton = createDeleteButton(entryContainer);
+
+                entryContainer.appendChild(entryInfo);
+                entryContainer.appendChild(copyGameIdButton);
+                entryContainer.appendChild(copyPasswordButton);
+                entryContainer.appendChild(deleteButton);
+
+                entryList.appendChild(entryContainer);
+
+                // フォームをクリア
+                gameIdInput.value = "";
+                passwordInput.value = "";
+            }
+        }
+
+        function createCopyButton(text) {
+            const copyButton = document.createElement("button");
+            copyButton.textContent = "コピー";
+            copyButton.classList.add("copy-button");
+            copyButton.addEventListener("click", () => {
+                copyToClipboard(text);
+            });
+            return copyButton;
+        }
+
+        function createDeleteButton(entryContainer) {
+            const deleteButton = document.createElement("button");
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // ゴミ箱アイコン
+            deleteButton.classList.add("delete-button");
+            deleteButton.addEventListener("click", () => {
+                entryContainer.parentNode.removeChild(entryContainer);
+            });
+            return deleteButton;
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            alert("コピーしました: " + text);
+        }
+    </script>
+</body>
+</html>
